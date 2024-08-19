@@ -3,7 +3,8 @@ from typing import List
 import anthropic
 import tiktoken
 from transformers import AutoTokenizer
-
+import google.generativeai as genai
+from vertexai.preview import tokenization
 
 class TokenizationUtils:
     """A wrapper for two tokenization-related operations:
@@ -23,6 +24,7 @@ class TokenizationUtils:
         "gpt-3.5-turbo-1106": {"model_provider": "openai", "model_name": "gpt-3.5-turbo", "context_size": 16385},
         "gpt-4-0613": {"model_provider": "openai", "model_name": "gpt-3.5-turbo", "context_size": 8192},
         "gpt-4-1106-preview": {"model_provider": "openai", "model_name": "gpt-4", "context_size": 128000},
+        "gemini-1.5-pro-001": {"model_provider": "google", "model_name": "gemini-1.5-pro", "context_size": 1000000},
     }
 
     def __init__(self, profile_name: str):
@@ -40,6 +42,11 @@ class TokenizationUtils:
             self._tokenizer = anthropic.Anthropic().get_tokenizer()
         elif self._model_provider == "huggingface":
             self._tokenizer = AutoTokenizer.from_pretrained(self._model_name)
+        elif self._model_provider == "google":
+            # self._tokenizer = self._encode_gemini
+            self._context_size = 1000000
+        else:
+            raise ValueError(f"{self._model_provider} is currently not supported for prompt truncation.")
 
     def _encode(self, text: str) -> List[str]:
         """Estimates the number of tokens for a given string."""
@@ -47,14 +54,23 @@ class TokenizationUtils:
             return self._tokenizer.encode(text)
         if self._model_provider == "anthropic":
             return self._tokenizer.encode(text)
+        # if self._model_provider == "google":
+        #     return self._tokenizer(text)
         if self._model_provider == "huggingface":
             return self._tokenizer(text).input_ids
 
         raise ValueError(f"{self._model_provider} is currently not supported for token estimation.")
 
+    def _count_tokens_gemini(self, text: str) -> int:
+        tokenizer = tokenization.get_tokenizer_for_model(self._model_name)
+        return tokenizer.count_tokens(text).total_tokens
+
     def count_text_tokens(self, text: str) -> int:
         """Estimates the number of tokens for a given string."""
-        return len(self._encode(text))
+        if self._model_provider == "google":
+            return self._count_tokens_gemini(text)
+        else:
+            return len(self._encode(text))
 
     def count_messages_tokens(self, messages: list[dict[str, str]]) -> int:
         """Estimates the number of tokens for a given list of messages.

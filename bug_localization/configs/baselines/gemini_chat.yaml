@@ -7,18 +7,17 @@ hydra:
     root:
       handlers: [ console, file ]
 backbone:
-  _target_: src.baselines.backbones.chat.openai_chat_backbone.OpenAIChatBackbone
-  name: openai_chat
-  model_name: gpt-3.5-turbo-1106
+  _target_: src.baselines.backbones.chat.gemini_chat_backbone.GeminiChatBackbone
+  name: gemini_chat
+  model_name: gemini-1.5-pro-001
   api_key: 
   parameters:
-    seed: 76097149
     temperature: 0
   prompt:
     _target_: src.baselines.backbones.chat.prompts.chat_file_list_prompt.ChatFileListPrompt
 data_source:
   _target_: src.baselines.data_sources.hf_data_source.HFDataSource
-  repos_dir: /Users/minooei/code/lca-baselines/bug_localization
+  repos_dir: /Users/minooei/code/lca-baselines/bug_localization/repos
   cache_dir: null
   hub_name: tiginamaria/bug-localization
   configs:
@@ -26,4 +25,3 @@ data_source:
     - java
     - kt
   split: test
-

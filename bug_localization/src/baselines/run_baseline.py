@@ -8,12 +8,14 @@ from datasets import config
 from dotenv import load_dotenv
 from hydra.core.hydra_config import HydraConfig
 
+import sys
+sys.path.append(os.path.abspath('/Users/minooei/code/lca-baselines/bug_localization'))
 from src.baselines.backbones.base_backbone import BaseBackbone
 from src.baselines.configs.baseline_configs import BaselineConfig
 from src.baselines.data_sources.base_data_source import BaseDataSource
 
 
-@hydra.main(version_base="1.1", config_path="../../configs/baselines")
+@hydra.main(version_base="1.1", config_path="../../configs/baselines", config_name='gemini_chat.yaml')
 def main(cfg: BaselineConfig) -> None:
     os.environ['HYDRA_FULL_ERROR'] = '1'
     backbone: BaseBackbone = hydra.utils.instantiate(cfg.backbone)

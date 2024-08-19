@@ -10,7 +10,7 @@ backbone:
   _target_: src.baselines.backbones.agent.openai_agent_backbone.OpenAIAgentBackbone
   name: openai_agent
   model_name: gpt-4-1106-preview
-  api_key: null
+  api_key: /Users/minooei/code/lca-baselines/
   prompt:
     _target_: src.baselines.backbones.agent.prompts.agent_simple_prompt.AgentSimplePrompt
 data_source:

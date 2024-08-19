@@ -1,6 +1,7 @@
 import json
 import re
 from typing import List, Dict, Any, Optional
+import google.generativeai as genai
 
 from src.baselines.backbones.chat.prompts.chat_base_prompt import ChatBasePrompt
 from src.utils.tokenization_utils import TokenizationUtils
