@@ -49,7 +49,7 @@ class GeminiChatBackbone(BaseBackbone):
             completion = self._get_chat_completion(messages)
             raw_completions.append(completion)
 
-            expected_files.update(parse_list_files_completion(completion, repo_content))
+            expected_files.update(parse_list_files_completion(completion))
 
         return {
             "expected_files": list(expected_files),

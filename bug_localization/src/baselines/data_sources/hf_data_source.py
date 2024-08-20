@@ -74,6 +74,7 @@ class HFDataSource(BaseDataSource):
             self._load_repos()
             for dp in dataset:
                 repo_path = os.path.join(self._repos_dir, f"{dp['repo_owner']}__{dp['repo_name']}")
+                print("DEBUG", self._repos_dir, f"{dp['repo_owner']}__{dp['repo_name']}", repo_path)
                 repo_content = get_repo_content_on_commit(repo_path, dp['base_sha'],
                                                           extensions=[config],
                                                           ignore_tests=True)
