@@ -75,10 +75,14 @@ class HFDataSource(BaseDataSource):
             for dp in dataset:
                 repo_path = os.path.join(self._repos_dir, f"{dp['repo_owner']}__{dp['repo_name']}")
                 print("DEBUG", self._repos_dir, f"{dp['repo_owner']}__{dp['repo_name']}", repo_path)
-                repo_content = get_repo_content_on_commit(repo_path, dp['base_sha'],
-                                                          extensions=[config],
-                                                          ignore_tests=True)
-                changed_files = get_changed_files_between_commits(repo_path, dp['base_sha'], dp['head_sha'],
-                                                                  extensions=[config],
-                                                                  ignore_tests=True)
-                yield dp, repo_content, changed_files
+                try:
+                    repo_content = get_repo_content_on_commit(repo_path, dp['base_sha'],
+                                                              extensions=[config],
+                                                              ignore_tests=True)
+                    changed_files = get_changed_files_between_commits(repo_path, dp['base_sha'], dp['head_sha'],
+                                                                      extensions=[config],
+                                                                      ignore_tests=True)
+                    yield dp, repo_content, changed_files
+                except (FileNotFoundError, ValueError, ModuleNotFoundError) as e:
+                    print(f"Error: {e}", repo_path)
+                    continue

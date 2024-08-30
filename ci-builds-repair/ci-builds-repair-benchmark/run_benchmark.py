@@ -20,7 +20,6 @@ fix_repo_function = fix_apply_diff
 
 # Download the dataset if you want to play with it
 test_dataset = CIBenchPython.get_dataset(force_download=True)
-
 # You can load datased from the local folder with json files, passing the path to an argument dataset_folder
 # test_dataset = CIBenchPython.get_dataset(force_download=False, dataset_folder=dataset_folder)
 
